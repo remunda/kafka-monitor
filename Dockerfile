@@ -11,9 +11,11 @@
 # limitations under the License.
 
 FROM anapsix/alpine-java:8_jdk as build
+ARG CODE_VERSION
 WORKDIR /src
-RUN apk add git && git clone https://github.com/linkedin/kafka-monitor.git
+RUN apk add git && git clone --branch master https://github.com/linkedin/kafka-monitor.git 
 WORKDIR /src/kafka-monitor
+RUN echo ${CODE_VERSION:=$(git tag | tail -1)} && git checkout $CODE_VERSION
 RUN ./gradlew jar
 
 
